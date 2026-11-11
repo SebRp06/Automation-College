@@ -1,0 +1,16 @@
+{
+  // tsconfig.json → configuración del compilador de TypeScript.
+  // TypeScript es JavaScript + "tipos": nos avisa de errores ANTES de ejecutar.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,              // modo estricto: más ayuda para detectar errores
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "playwright.config.ts"]
+}

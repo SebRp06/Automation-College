@@ -1,0 +1,23 @@
+{
+  "name": "demo-screenplay-playwright",
+  "version": "1.0.0",
+  "description": "Demo de automatización web con Playwright + TypeScript + patrón Screenplay sobre saucedemo.com",
+  "private": true,
+  "scripts": {
+    "bdd": "bddgen",
+    "test": "bddgen && playwright test",
+    "test:headed": "bddgen && playwright test --headed",
+    "test:ui": "bddgen && playwright test --ui",
+    "test:login": "bddgen --tags \"@login\" && playwright test",
+    "test:carrito": "bddgen --tags \"@carrito\" && playwright test",
+    "test:compra": "bddgen --tags \"@compra\" && playwright test",
+    "test:ordenar": "bddgen --tags \"@ordenar\" && playwright test",
+    "reporte": "playwright show-report",
+    "tipos": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.60.0",
+    "playwright-bdd": "8.5.1",
+    "typescript": "^5.6.0"
+  }
+}

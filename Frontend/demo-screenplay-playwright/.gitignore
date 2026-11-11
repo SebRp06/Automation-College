@@ -1,0 +1,8 @@
+node_modules/
+.features-gen/
+test-results/
+playwright-report/
+dist/
+.vscode/
+.idea/
+.DS_Store
