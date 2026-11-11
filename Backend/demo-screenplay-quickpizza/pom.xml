@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ==========================================================================
+  pom.xml  →  El "archivo de configuración" de un proyecto Maven.
+  ==========================================================================
+  Maven es una herramienta que:
+    1. Descarga automáticamente las librerías (dependencias) que necesitamos.
+    2. Compila y ejecuta nuestras pruebas con un solo comando: mvn clean verify
+    3. Genera el reporte HTML de Serenity al final.
+
+  Piensa en este archivo como la "lista de mercado" del proyecto: aquí
+  decimos QUÉ librerías usar y en QUÉ versión.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identificación del proyecto (como el "nombre y apellido" del proyecto) -->
+    <groupId>co.com.demo</groupId>
+    <artifactId>demo-screenplay-quickpizza</artifactId>
+    <version>1.0.0</version>
+    <name>Demo Screenplay + Rest Assured - API de QuickPizza (Grafana k6)</name>
+
+    <!-- Variables reutilizables: así cambiamos una versión en un solo lugar -->
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <serenity.version>4.2.1</serenity.version>
+        <cucumber.version>7.18.1</cucumber.version>
+        <junit.platform.version>1.10.2</junit.platform.version>
+    </properties>
+
+    <dependencies>
+        <!-- ===== SERENITY BDD: el framework que implementa el patrón Screenplay ===== -->
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-core</artifactId>
+            <version>${serenity.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Screenplay: Actores, Tareas, Preguntas, Habilidades... -->
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-screenplay</artifactId>
+            <version>${serenity.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Screenplay + REST: une Screenplay con Rest Assured (Get, Post, Put...) -->
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-screenplay-rest</artifactId>
+            <version>${serenity.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Integra Serenity con Cucumber (los archivos .feature en español) -->
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-cucumber</artifactId>
+            <version>${serenity.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ===== CUCUMBER + JUNIT 5: el "motor" que ejecuta los .feature ===== -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+          JUnit 4: el reporter de Serenity para Cucumber todavía usa algunas clases
+          de JUnit 4 por dentro. Sin esta dependencia aparece el error:
+          NoClassDefFoundError: org/junit/runners/ParentRunner
+        -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ===== JACKSON: convierte objetos Java  <->  JSON automáticamente ===== -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ===== HAMCREST: para escribir validaciones legibles (equalTo, greaterThan...) ===== -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Log simple para ver mensajes en consola -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Surefire: ejecuta las pruebas en la fase "test" -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <!-- Solo ejecuta nuestro runner (la clase que lanza Cucumber) -->
+                    <includes>
+                        <include>**/runners/*.java</include>
+                    </includes>
+                    <!-- Si una prueba falla, igual seguimos para poder generar el reporte -->
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+
+            <!-- Serenity: genera el reporte HTML (target/site/serenity/index.html) -->
+            <plugin>
+                <groupId>net.serenity-bdd.maven.plugins</groupId>
+                <artifactId>serenity-maven-plugin</artifactId>
+                <version>${serenity.version}</version>
+                <executions>
+                    <execution>
+                        <id>serenity-reports</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
